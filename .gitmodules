@@ -1,0 +1,3 @@
+[submodule "PracticalLombScargle"]
+	path = PracticalLombScargle
+	url = https://github.com/jakevdp/PracticalLombScargle.git
