@@ -1,0 +1,27 @@
+# Local raw data and bulky FITS products. These are reproducible from the
+# shared Google Drive/raw archive and are too large for ordinary GitHub pushes.
+raw/
+*.fit
+*.fits
+*.fts
+
+# Bulky diagnostic overlays. Final figures/CSVs outside qc/ are kept tracked.
+analysis/project/qc/
+
+# Python/runtime caches
+__pycache__/
+*.py[cod]
+.venv/
+.matplotlib/
+
+# OS/editor noise
+.DS_Store
+
+# LaTeX build byproducts. Keep the .tex source and compiled PDF if desired.
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz

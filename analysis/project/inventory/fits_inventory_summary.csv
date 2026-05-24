@@ -1,0 +1,17 @@
+directory,object,filter,exptime,n
+calibration,bias_2026_05_20,,0.0,10
+calibration,darks_0.3s_2026_05_20,,0.3,5
+calibration,darks_35s_2026_05_20,,35.0,3
+calibration,darks_40s_2026_05_20,,40.0,3
+calibration,darks_45s_2026_05_20,,45.0,3
+calibration,darks_4s_2026_05_20,,4.0,5
+calibration,darks_6s_2026_05_20,,6.0,5
+calibration,darks_8s_2026_05_20,,8.0,5
+calibration,flat_V_4s_2026_05_20,V,4.0,8
+calibration,flat_V_6s_2026_05_20,V,6.0,5
+calibration,flats_V_0.3s_2026_05_20,V,0.3,10
+lights,light_AMCVn_V_35s_2026_05_20,V,35.0,46
+lights,light_AMCVn_V_40s_2026_05_20,V,40.0,65
+lights,light_AMCVn_V_45s_2026_05_20,V,45.0,29
+lights,light_V0399_V_8s_2026_05_20,V,8.0,109
+lights,light_V_8s_2026_05_20,V,8.0,83
