@@ -60,11 +60,15 @@ This fixed the main solve failure:
 - `light_V_8s`: `83/83` good frames with `7-8` comparison stars.
 - `light_V0399_V_8s`: `107/109` good frames; 2 rejected because V0399 saturated.
 
-Relevant products:
+Useful per-sequence products:
 
 - `analysis/project/photometry/V0399_UMa_V8s_per_frame_sep/V8s_per_frame_sep_light_curve.csv`
 - `analysis/project/photometry/V0399_UMa_named_per_frame_sep/V0399_named_per_frame_sep_light_curve.csv`
-- `analysis/project/plots/V0399_UMa_combined_per_frame_sep_light_curve.png`
+
+The old direct-tracking plot and the combined per-frame SEP light curve were
+removed from the shared products because they are easy to misuse: direct
+tracking failed on later `V_8` frames, and the combined per-frame SEP product
+used different comparison ensembles for the two sequences.
 
 ## Comparison-Star Selection
 
