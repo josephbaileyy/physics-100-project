@@ -576,6 +576,165 @@ constant model. Because `8.76 min` is close to half of `17.5 min`, this should
 be treated as a possible harmonic/alias issue rather than immediately as a
 distinct physical period.
 
+### AM CVn period uncertainty and literature comparison
+
+The formal target aperture errors underestimate the full point-to-point scatter.
+The median formal normalized error is `0.90%`, while the robust target scatter is
+`1.51%`. Propagating an estimated comparison-ensemble term raises the median
+error only to about `0.98-1.00%`, so the remaining high reduced chi2 is best
+explained by a combination of intrinsic AM CVn flickering, changing double-wave
+shape, and unmodeled systematic scatter rather than a clearly incorrect
+differential-photometry reduction.
+
+Model tests on the 138 retained AM CVn points:
+
+| Model | chi2 | reduced chi2 | BIC improvement vs constant | RMS |
+|---|---:|---:|---:|---:|
+| constant flux | `457.85` | `3.34` | `0.00` | `1.66%` |
+| sine at LS best, `8.766 min` | `383.90` | `2.84` | `-64.10` | `1.52%` |
+| sine at `17.14 min` | `412.62` | `3.06` | `-35.37` | `1.58%` |
+| double wave at `17.14 min` | `359.08` | `2.70` | `-79.06` | `1.48%` |
+
+The F-tests and BIC favor a periodic model over constant flux, and favor a
+double-wave harmonic model over a single `17.14 min` sine. However, all reduced
+chi2 values remain high, so the simple models do not explain all of the observed
+scatter.
+
+Allowing the period to vary gives:
+
+| Fit | Best period | formal delta-chi2 interval | scaled-error interval |
+|---|---:|---:|---:|
+| sine near LS peak | `8.750 min` | `-0.042/+0.043 min` | `+/-0.072 min` |
+| double-wave fundamental | `17.586 min` | `-0.089/+0.090 min` | `-0.146/+0.150 min` |
+
+Bootstrap Lomb-Scargle tests are bimodal between the `~8.8 min` harmonic and the
+`~17-19 min` family. Row-resampling gives a median FAP `4.26e-4`, with `94.7%`
+of trials below `0.05`; perturbing the data by the empirically scaled errors
+gives a median FAP `0.266`, with only `21.4%` below `0.05`. Thus the data
+support AM CVn variability, but the exact period assignment is not robust at the
+precision needed for a period-derivative claim.
+
+Conditioning the bootstrap samples on which period family is selected gives
+tighter within-family spreads, but these should not be confused with the global
+period uncertainty because they condition away the alias ambiguity:
+
+| Bootstrap | Family | Weight | conditional period | conditional FAP |
+|---|---:|---:|---:|---:|
+| row resample | half-period | `0.608` | `8.766 -0.085/+0.070 min` | median `3.35e-4` |
+| row resample | doubled half-period | `0.608` | `17.532 -0.171/+0.139 min` | median `3.35e-4` |
+| row resample | long-period family | `0.373` | `18.289 -0.477/+0.678 min` | median `6.38e-4` |
+| scaled perturbation | half-period | `0.556` | `8.766 -0.069/+0.070 min` | median `0.228` |
+| scaled perturbation | doubled half-period | `0.556` | `17.532 -0.137/+0.139 min` | median `0.228` |
+| scaled perturbation | long-period family | `0.433` | `18.424 -0.591/+0.631 min` | median `0.317` |
+
+A two-Gaussian mixture fit to the bootstrap period distribution was also tested.
+It gives a compact half-period component near `8.75 min`, but the long-period
+component is broad and non-Gaussian because it contains aliases/tails. Therefore
+the family-split percentile intervals above are preferred for reporting
+conditional bootstrap widths.
+
+Patterson et al. (1979) measured the 1978 photometric/superhump-like period as
+`1051.212 +/- 0.015 s` and reported `dP/dt = +0.012 +/- 0.003 s/yr`. Projected
+from their 1978 epoch to the midpoint of these observations
+(`JD 2461181.77`, 2026-05-21 UTC), that predicts only
+`1051.790 +/- 0.145 s`, a change of `0.578 +/- 0.145 s`. Our best double-wave
+fundamental is `17.586 min = 1055.18 s`, with a scaled uncertainty of about
+`8.9 s`. This is consistent with both Patterson's 1978 photometric period and
+the period predicted by their quoted derivative, but the uncertainty is roughly
+`15x` larger than the expected secular change. Therefore these data cannot
+confirm or refute the Patterson period increase.
+
+Roelofs et al. (2006) distinguish the true spectroscopic orbital period
+`1028.7322 +/- 0.0003 s` from the main `~1051 s` photometric superhump. Our
+photometric double-wave period is consistent with the superhump family, but it
+is not a precision orbital-period measurement and should not be used as a test
+of the spectroscopic orbital period.
+
+Kruszewski & Semeniuk (1992) reanalyzed Smak's 1962 observations and likewise
+separated the dominant `1051 s` family, mostly seen through the `525 s` harmonic,
+from another weaker `1023` or `1011 s` mode. They concluded that the period of
+the dominant `525 s` harmonic could not be uniquely determined from the 1962
+data, probably because of slow changes over the four-month observing interval.
+They preferred `1023.02 s` for the other mode, while noting that Patterson et al.
+(1992) obtained `1023.44 s` and that the difference could be a cycle-count alias.
+
+Our LS half-period is `524.985 s`; doubled, it is `1049.970 s` with a scaled
+uncertainty of `8.64 s`. The direct double-wave fundamental fit gives
+`1055.179 s` with scaled uncertainty `8.89 s`. Both are consistent with the
+`~1051 s` superhump family discussed by Kruszewski & Semeniuk. They are
+inconsistent with `1023.02 s` at about `3.1-3.6 sigma` using the scaled
+uncertainties, but that is not evidence for a secular period change because
+`1023 s` is a different mode from the dominant `1051 s`/`525 s` superhump
+component measured here.
+
+### Exploratory AM CVn period-modeling pass
+
+A more complete exploratory pass was run with data-driven fits only, followed by
+literature comparison. The baseline is `111.20 min` with 138 retained points and
+median cadence `48.55 s`. This covers about `12.7` cycles of the `525 s`
+harmonic, `6.3` cycles of the `1051 s` superhump, and only `0.139` cycles of the
+`13.38 h` disk precession.
+
+The best BIC model is a free-period double-wave model:
+
+| Model | Period | chi2 | reduced chi2 | BIC improvement vs constant | RMS |
+|---|---:|---:|---:|---:|---:|
+| double wave, free period | `17.5866 min` | `336.46` | `2.53` | `-101.68` | `1.43%` |
+| sine, LS half-period | `8.7422 min` | `383.79` | `2.84` | `-64.20` | `1.53%` |
+| sine, `1051.2 s` superhump | `17.5200 min` | `403.99` | `2.99` | `-44.00` | `1.56%` |
+| sine, `1028.7322 s` orbital | `17.1455 min` | `412.49` | `3.06` | `-35.50` | `1.58%` |
+
+The double-wave model strongly improves the fit, but reduced chi2 remains above
+1, so extra flickering/waveform variation is still present.
+
+Windowed Lomb-Scargle scans find:
+
+| Window | Best period | FAP | Interpretation |
+|---|---:|---:|---|
+| `5-12 min` | `8.744 min` | `0.0085` | robust half-period harmonic |
+| `7-10 min` | `8.742 min` | `0.0086` | robust half-period harmonic |
+| `14-22 min` | `18.366 min` | `0.043` | weaker long-period family |
+| `3-180 min` | `8.744 min` | `0.0084` | global best is harmonic |
+| `115-120 s` | `119.6 s` | `1.0` | not detected |
+| `26.3 s` window | `23.8 s` | `0.296` | not detected; below cadence/exposure limit |
+
+Residual periodograms after subtracting the best double-wave model do not show a
+credible remaining signal: the `115-120 s` residual search has FAP `1.0`, and
+the `26.3 s` residual search has FAP `0.997`.
+
+Ten-thousand-trial bootstrap tests show that the period estimate remains
+bimodal:
+
+| Bootstrap | FAP median | FAP < 0.05 | half-family fraction | long-family fraction |
+|---|---:|---:|---:|---:|
+| row resample | `4.64e-4` | `0.950` | `0.596` | `0.387` |
+| perturb formal errors | `0.054` | `0.482` | `0.646` | `0.353` |
+| perturb scaled errors | `0.253` | `0.208` | `0.573` | `0.411` |
+| 10 min block resample | `1.02e-4` | `0.973` | `0.613` | `0.386` |
+
+Conditional family intervals are tighter but do not remove the global alias
+ambiguity. For the scaled-error perturbation bootstrap, the half-period family
+is `8.766 -0.102/+0.070 min`; doubled, this is
+`17.532 -0.205/+0.139 min`. The long-period family is
+`18.424 -0.591/+0.631 min`.
+
+The detectability limits are important:
+
+- `26.3 s`: not reliable; shorter than the exposures and below the cadence
+  Nyquist, with median exposure-smearing attenuation only `0.21`.
+- `115-120 s`: marginally sampled at only `2.4` samples per cycle and not
+  detected in the residual periodogram.
+- `13.38 h` precession: not measurable from this run because less than one
+  fifth of a cycle is covered.
+
+Final AM CVn interpretation from the exploratory pass: the data favor a
+photometric superhump-family signal dominated by the `~525 s` harmonic /
+`~1051 s` double-wave family. The spectroscopic `1028.7 s` orbital period is not
+the dominant photometric signal in these data, but this does not contradict the
+literature because the orbital period is spectroscopic and the photometry is
+expected to be superhump-dominated. The present data are not precise enough to
+test the Patterson period derivative or to measure disk precession.
+
 Relevant AM CVn products:
 
 - `analysis/project/aavso/X42421BZ.json`
@@ -588,7 +747,27 @@ Relevant AM CVn products:
 - `analysis/project/photometry/AM_CVn_sequence_X42421BZ/AM_CVn_early_late_frame_contact_sheet.png`
 - `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/period_results.csv`
 - `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/fixed_period_sine_summary.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/model_chi2_f_bic_summary_refined.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/period_delta_chi2_intervals.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/bootstrap_period_summary.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/bootstrap_period_family_conditional_intervals.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/bootstrap_period_family_sklearn_gmm_summary.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/literature_period_change_test_summary.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/literature_period_comparisons.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/literature_1992_kruszewski_comparison.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/exploratory_model_comparison.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/exploratory_lomb_scargle_window_summary.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/exploratory_bootstrap_period_summary.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/exploratory_bootstrap_family_intervals.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/exploratory_residual_periodogram_summary.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/exploratory_signal_detectability_summary.csv`
+- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/exploratory_literature_comparison.csv`
 - `analysis/project/plots/AM_CVn_sequence_X42421BZ_light_curve.png`
+- `analysis/project/plots/AM_CVn_period_uncertainty_diagnostics.png`
+- `analysis/project/plots/AM_CVn_exploratory_periodogram_windows.png`
+- `analysis/project/plots/AM_CVn_exploratory_folded_models.png`
+- `analysis/project/plots/AM_CVn_exploratory_bootstrap_family_histograms.png`
+- `analysis/project/plots/AM_CVn_exploratory_residual_periodograms.png`
 
 ## Final Suggested Claim
 

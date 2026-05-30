@@ -1,0 +1,279 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{siunitx}
+\usepackage{float}
+\usepackage{xurl}
+
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+
+\title{Physically Motivated Time-Series Photometry of AM CVn}
+\author{TODO: Team Members}
+\date{TODO: Submission Date}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We observed AM Canum Venaticorum (AM CVn) in the V band on 2026 May 20 to test
+whether short-baseline CCD photometry can recover and refine its known
+ultracompact variability.  We reduced 140 images with bias, dark, and
+star-masked flat-field calibration, then performed AAVSO-sequence differential
+photometry.  After rejecting two artifact frames, 138 exposures spanning
+111.20 min remained.  A generic single-sine search detects a 525.06 s signal,
+close to the expected first harmonic of AM CVn's positive superhump.  A
+physically motivated double-wave model gives the best independent period,
+\(1055.21 \pm 8.58\) s after empirical error scaling.  A fixed 1051.2 s
+superhump-plus-harmonic template is nearly as good, but does not beat the free
+model in BIC or cross-validation.  The data therefore support detection of AM
+CVn's known superhump/harmonic family, but they do not tighten the literature
+period constraints.
+\end{abstract}
+
+\section{Introduction}
+
+AM CVn is the prototype of a class of hydrogen-deficient ultracompact
+interacting binaries.  These systems contain an accreting white dwarf and a
+helium-rich donor, and their periods are short enough to connect accretion-disc
+physics, compact-binary evolution, and low-frequency gravitational-wave
+astrophysics \cite{solheim2010,roelofs2006}.
+
+The period structure of AM CVn is subtle.  Early photometry showed a double
+wave near 17.5 min and a strong 8.76 min harmonic \cite{patterson1979}.  Later
+spectroscopy established \(P_{\rm orb}=1028.7322\) s as the orbital period,
+while the dominant \(1051.2\) s photometric signal is interpreted as a positive
+superhump \cite{nelemans2001,roelofs2006}.  Recent work uses this period
+structure to revisit AM CVn system parameters and period change
+\cite{smak2023}.
+
+Our goal is not only to detect variability, but to ask a sharper question: can
+our local 111 min light curve constrain the literature periods more tightly?
+To avoid overclaiming, we separate independent constraints from conditional
+constraints.  Independent constraints use periods fitted freely from our data.
+Conditional constraints assume a literature-motivated physical identification,
+such as the known superhump or orbital signal.
+
+\section{Observations and Reduction}
+
+The observations were taken on 2026 May 20 in the V band.  The AM CVn sequence
+contains 140 frames with exposure times of 35, 40, and 45 s.  The reduction used
+late-night bias frames, exposure-matched darks, and a star-masked
+\texttt{flat\_4s\_masked\_clipmean} flat.  The final two frames showed severe
+artifacts and low counts, so they were excluded.
+
+The science frames did not have a reliable WCS solution.  We therefore used the
+AAVSO comparison sequence X42421BZ to map the target and comparison stars onto
+a good reference frame.  Aperture photometry used a 6 px aperture and a
+12--20 px sky annulus.  Fluxes were divided by exposure time before comparison,
+so frames with different exposure times could be combined.  Each comparison
+star was normalized by its own median flux before constructing the ensemble,
+preventing the brightest comparison stars from dominating the differential
+light curve.
+
+The final light curve contains 138 good points.  It spans 111.20 min, or 6.35
+cycles of a 1051.2 s superhump.  The robust target scatter is 1.51 percent,
+while the median formal photometric error is 0.90 percent.  This excess scatter
+motivates the empirical error scaling used below.
+
+\section{Analysis Methods}
+
+We first fit a model ladder.  The baseline model is constant flux.  The
+generic models are a free single sine and a free double-wave model containing a
+fundamental plus its first harmonic.  We also ran multi-harmonic
+Lomb-Scargle periodograms: \texttt{nterms=2} is the periodogram analogue of the
+free double-wave model.  The physically motivated models use literature
+periods: the 1028.7322 s orbital period, the 1051.2 s positive superhump, a
+1011.4 s negative superhump, and a superhump-plus-harmonic template.  Finally,
+we fit a beat-constrained precessing-disc proxy with
+\(f_{\rm sh}=f_{\rm orb}-f_{\rm prec}\).  The 13.38 h disc precession period
+was not directly fit from the light curve because our run covers only 0.14
+cycle of it.
+
+For each model we report chi-square, BIC, RMS residual scatter, and
+time-blocked cross-validation error.  For free periods, we compute profile
+\(\chi^2\) intervals and block-bootstrap uncertainties.  Formal photon-noise
+errors underestimate the residual scatter, so the final period uncertainties
+use the best double-wave model's \(\sqrt{\chi^2_\nu}=1.59\) scale factor.  We
+also test stability by fitting the first and second halves separately, clipping
+outliers, dropping comparison stars one at a time, and checking residual
+periodograms.  As final stress tests, we fit extra nuisance terms for time,
+tracking shifts, exposure state, and ensemble common mode; repeat the
+double-wave fit with robust loss functions; and rebuild the differential light
+curve from comparison-star subsets.
+
+\section{Results}
+
+The single-sine search recovers \(525.06 \pm 4.27\) s after empirical error
+scaling.  Ordinary Lomb-Scargle detects the same harmonic at 525.08 s.  When
+Lomb-Scargle is generalized to a two-term Fourier model, it recovers a
+fundamental near 1053.27 s.  Thus Lomb-Scargle is useful as a detection tool,
+but it must be made multi-harmonic or followed by physical model fitting for AM
+CVn.
+
+The best independent model is the free double-wave fit:
+\[
+P_{\rm free}=1055.21 \pm 8.58~{\rm s}.
+\]
+This is consistent with the known 1051.2 s superhump family.  It is not precise
+enough to improve the published photometric or spectroscopic periods.
+
+\begin{table}[H]
+\centering
+\caption{AM CVn model ladder.  \(\Delta{\rm BIC}\) is measured relative to the
+best free double-wave model; positive values are worse.}
+\label{tab:model-ladder}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrr}
+\toprule
+Model & Physical interpretation & Period (s) & RMS (\%) & \(\Delta{\rm BIC}\) & CV RMS (\%) \\
+\midrule
+free double wave & fundamental + harmonic & 1055.21 & 1.43 & 0.00 & 1.52 \\
+beat-constrained disk & \(f_{\rm sh}=f_{\rm orb}-f_{\rm prec}\) & 1055.22 & 1.43 & 0.00 & 1.52 \\
+1051.2 s + harmonic & positive-superhump template & 1051.2 & 1.43 & 0.55 & 1.53 \\
+free single sine & harmonic-only detection & 525.06 & 1.52 & 37.44 & 1.57 \\
+orbital + positive + negative SH & three known clocks & fixed & 1.50 & 45.55 & 1.65 \\
+orbital + positive SH & two known clocks & fixed & 1.53 & 52.99 & 1.71 \\
+positive SH only & 1051.2 s sine & 1051.2 & 1.56 & 57.67 & 1.62 \\
+orbital only & 1028.7322 s sine & 1028.73 & 1.58 & 66.18 & 1.65 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+The most important result in Table~\ref{tab:model-ladder} is that the
+beat-constrained precessing-disc proxy and the free double-wave model are
+effectively tied.  This happens because a freely fitted precession period maps
+the known orbital period onto the best photometric double-wave period; the
+derived value is \(P_{\rm prec}\simeq 11.39\) h.  This captures the expected
+superhump physics better than a generic Fourier fit, but it is not an
+independent precession detection because the baseline covers far less than one
+precession cycle.  The fixed 1051.2 s superhump-plus-harmonic template is also
+nearly tied, supporting the literature interpretation.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{analysis/project/plots/AM_CVn_physical_model_ladder.png}
+\caption{Physically motivated model-suite summary.  The upper-left panel shows
+the AM CVn differential light curve and the best free double-wave model.  The
+upper-right panel folds the same model.  The lower-left panel shows that the
+residual periodogram has no significant remaining peak.  The lower-right panel
+compares BIC values against the free double-wave fit.}
+\label{fig:model-suite}
+\end{figure}
+
+The validation tests are mixed.  Dropping one comparison star at a time changes
+the free double-wave period by only 5.2 s, and clipping \(|z|>4\) outliers
+changes it by only 0.02 s.  The residual periodogram has false-alarm
+probability 0.99, so no strong unmodeled short-period signal remains.  However,
+the first-half and second-half fitted periods differ by 22.8 s.  That split is
+not surprising with only about six superhump cycles, but it blocks any strong
+claim that the period is tightly constrained by our data alone.
+
+We also tried three ways to squeeze more information out of the same light
+curve.  First, adding nuisance regressors for time, image shifts, exposure
+time, number of comparison stars, and common-mode behavior can reduce the raw
+RMS from 1.43\% to 1.41\%, but BIC and blocked cross-validation get worse
+(\(\Delta{\rm BIC}=22.66\), \(\Delta{\rm CV}=0.97\%\) for the most flexible
+case).  This indicates overfitting rather than a better physical constraint.
+Second, robust likelihoods do not sharpen the answer: soft-\(L_1\), Huber, and
+Cauchy losses shift the best period to 1057--1059 s and increase the ordinary
+RMS.  Third, selected comparison-star subsets can shave the target RMS as low
+as 1.40\%, but the fitted period moves by a few seconds and the control-star
+scatter does not justify replacing the full ensemble.  These tests are useful
+because they show what does not work: the limiting uncertainty is the short
+baseline and cycle-to-cycle structure, not just Gaussian photometric noise.
+
+The broadband photometry cannot test AM CVn's S-wave emission directly.  The
+S-wave is a spectroscopic velocity feature from the bright spot or stream-disc
+impact region.  Testing it requires time-resolved spectroscopy or Doppler
+tomography, not V-band imaging.  For the same reason, our photometry can support
+the known white-dwarf-binary interpretation but cannot independently prove or
+disprove the object class.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\textwidth]{analysis/project/plots/AM_CVn_physical_literature_constraints.png}
+\caption{Comparison between our period constraints and literature periods.  Our
+independent scaled uncertainty is about 8.6 s, far larger than the published
+precision of the orbital and superhump periods.  The result is therefore
+consistent with the literature, not more constraining than it.}
+\label{fig:literature-constraints}
+\end{figure}
+
+\section{Conclusions}
+
+Our data clearly detect short-timescale AM CVn variability.  A single-sine
+model finds a 525 s signal, while the physically preferred interpretation is a
+double-wave signal in the known 1051 s superhump family.  The best independent
+period is \(1055.21 \pm 8.58\) s, and the literature-fixed 1051.2 s
+superhump-plus-harmonic template is nearly as good.
+
+The result does not tighten the literature constraints.  The physically
+motivated model does not beat the free double-wave model, the first/second-half
+stability test fails, and our independent uncertainty is hundreds of times
+larger than the best published period precision.  Detrending, robust
+likelihoods, and comparison-star subset searches improve neither predictive
+performance nor period stability.  The strongest defensible claim is therefore:
+our photometry independently recovers variability consistent with AM CVn's
+known superhump/harmonic structure, but a longer multi-night baseline would be
+needed to improve published period constraints.
+
+\section*{Acknowledgments}
+
+We thank the PHYSICS 100 teaching staff for telescope access and reduction
+guidance.  This work used AAVSO comparison-star resources and NASA ADS/arXiv
+literature records.
+
+\begin{thebibliography}{9}
+
+\bibitem{nelemans2001}
+Nelemans, G., Steeghs, D., \& Groot, P. J. 2001.
+\textit{Spectroscopic evidence for the binary nature of AM CVn}.
+MNRAS, 326, 621.
+\url{https://academic.oup.com/mnras/article/326/2/621/1006901}.
+
+\bibitem{patterson1979}
+Patterson, J., Nather, R. E., Robinson, E. L., \& Handler, F. 1979.
+\textit{Increase in the orbital period of AM Canum Venaticorum}.
+ApJ, 232, 819.
+\url{https://articles.adsabs.harvard.edu/pdf/1979ApJ...232..819P}.
+
+\bibitem{roelofs2006}
+Roelofs, G. H. A., Groot, P. J., Nelemans, G., Marsh, T. R., \& Steeghs, D. 2006.
+\textit{Kinematics of the ultracompact helium accretor AM Canum Venaticorum}.
+MNRAS, 371, 1231.
+\url{https://academic.oup.com/mnras/article/371/3/1231/1007944}.
+
+\bibitem{smak2023}
+Smak, J. 2023.
+\textit{AM CVn -- System Parameters and Gravitational Waves}.
+Acta Astronomica, 73, 1.
+\url{https://arxiv.org/pdf/2312.16506}.
+
+\bibitem{solheim2010}
+Solheim, J.-E. 2010.
+\textit{AM CVn Stars: Status and Challenges}.
+PASP, 122, 1133.
+
+\end{thebibliography}
+
+\appendix
+\section{Individual Contributions}
+
+TODO: Fill in team-member names and individual contributions before
+submission, as required by the project instructions.
+
+\section{Reproducibility}
+
+The model suite is generated with:
+\begin{verbatim}
+python scripts/amcvn_physical_model_suite.py --bootstrap 250
+\end{verbatim}
+The generated CSV files use the \texttt{physical\_*} prefix in the AM CVn
+periodogram folder.  The generated figures use the
+\texttt{AM\_CVn\_physical\_*} prefix in the plot folder.
+
+\end{document}

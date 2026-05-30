@@ -1,0 +1,6 @@
+test,metric,value,pass,note
+first_half_second_half,double_wave_period_s_difference,22.819015846538832,False,first=1053.78s second=1076.60s
+outlier_clip_abs_z_le_4,double_wave_period_s_shift,0.020718125122130004,True,kept=138/138 clipped_period=1055.23s
+leave_one_comparison_out,double_wave_period_s_span,5.204336947456341,True,computed from aperture photometry by dropping one comparison at a time
+residual_periodogram,best_residual_fap,0.9890297626906768,True,best residual period=20.46 min
+literature_tightening,independent_sigma_s_vs_patterson_sigma_s,572.1430357589342,False,must be <1 to beat Patterson 1979 period precision
