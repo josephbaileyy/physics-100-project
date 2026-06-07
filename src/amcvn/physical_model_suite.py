@@ -708,6 +708,45 @@ def summarize_monte_carlo(mc: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def plot_monte_carlo_periods(mc: pd.DataFrame, summary: pd.DataFrame) -> Path:
+    PLOT_DIR.mkdir(parents=True, exist_ok=True)
+    specs = [
+        ("single_sine_free", "Single-sine harmonic", 525.0550183394465, "tab:blue"),
+        ("double_wave_free", "Double-wave fundamental", 1055.2138034508628, "tab:purple"),
+    ]
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), constrained_layout=True)
+    for ax, (model, title, original_period_s, color) in zip(axes, specs):
+        periods = mc[f"{model}_period_s"].to_numpy(float)
+        row = summary[summary.model.eq(model)].iloc[0]
+        median = float(row.period_median_s)
+        lo = median - float(row.minus_1sigma_s)
+        hi = median + float(row.plus_1sigma_s)
+        ax.hist(periods, bins=32, color=color, alpha=0.75, edgecolor="white")
+        ax.axvline(original_period_s, color="black", lw=1.6, label="Original best fit")
+        ax.axvline(median, color="tab:red", lw=1.8, label="MC median")
+        ax.axvspan(lo, hi, color="tab:red", alpha=0.16, label="16th-84th pct.")
+        ax.set_title(title)
+        ax.set_xlabel("Best-fit period [s]")
+        ax.set_ylabel("Monte Carlo realizations")
+        ax.grid(alpha=0.25)
+        ax.text(
+            0.03,
+            0.95,
+            f"{median:.2f} s\n-{float(row.minus_1sigma_s):.2f}/+{float(row.plus_1sigma_s):.2f} s",
+            transform=ax.transAxes,
+            va="top",
+            ha="left",
+            fontsize=9,
+            bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
+        )
+    axes[0].legend(fontsize=8, loc="upper right")
+    fig.suptitle("Fixed-time Monte Carlo period uncertainty", fontsize=14)
+    out = PLOT_DIR / "AM_CVn_monte_carlo_period_uncertainty.png"
+    fig.savefig(out, dpi=180)
+    plt.close(fig)
+    return out
+
+
 def leave_one_comparison_out(t_min: np.ndarray, sigma: np.ndarray) -> pd.DataFrame:
     phot_path = PHOT_DIR / "aperture_photometry.csv"
     if not phot_path.exists():
@@ -1158,6 +1197,7 @@ def main() -> None:
     monte_carlo.to_csv(PER_DIR / "physical_monte_carlo_periods.csv", index=False)
     monte_carlo_summary = summarize_monte_carlo(monte_carlo)
     monte_carlo_summary.to_csv(PER_DIR / "physical_monte_carlo_period_summary.csv", index=False)
+    plot_monte_carlo_periods(monte_carlo, monte_carlo_summary)
 
     loo = leave_one_comparison_out(t_min, sigma)
     loo.to_csv(PER_DIR / "physical_leave_one_comparison_out.csv", index=False)
