@@ -1,3 +1,0 @@
-target,run,n_good,min_period_days,max_period_days,best_period_days,best_period_minutes,best_frequency_cpd,best_power,false_alarm_probability
-V0399_UMa,default,63,0.003472222222222222,0.125,0.125,180.0,8.0,0.8128275810028986,1.0513914531149713e-19
-V0399_UMa,wide,63,0.003472222222222222,0.25,0.25,360.0,4.0,0.8183808925592129,4.338729091213519e-20

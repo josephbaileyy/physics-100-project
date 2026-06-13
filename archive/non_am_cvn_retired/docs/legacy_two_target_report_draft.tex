@@ -1,0 +1,477 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{siunitx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{xurl}
+
+\graphicspath{{./}}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+
+\title{Time-Series Photometry of V0399 UMa and AM CVn}
+\author{TODO: Team Members}
+\date{TODO: Submission Date}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We obtained time-series V-band observations of two suspected short-period
+variable targets, V0399 UMa and AM CVn, on 2026 May 20 using the 0.7 m
+telescope. Our goal was to reduce the CCD images into differential light curves
+and test for periodic variability with Lomb-Scargle periodograms and fixed-period
+model fits. Calibration was complicated by dome-light contamination in the short
+flats and early bias frames, star contamination in the longer flats, and
+tracking artifacts in some science images. We therefore compared multiple flat
+fields, used per-frame source matching, and used control stars to quantify
+systematic uncertainty. For V0399 UMa, the most consistent light curve has a
+scatter near 1.4 percent, but no reliable detection of the cataloged 15.3 min
+period. Difference-image and aperture-size tests indicate strong contamination
+or common-mode coupling with nearby DN UMa. For AM CVn, AAVSO sequence
+photometry gives a stronger signal: the dominant Lomb-Scargle peak is near
+8.76 min with false-alarm probability 0.014, while fixed fits near 17.1 min are
+weaker but still modestly favored. We conclude that AM CVn is detected as
+variable, while the V0399 UMa data support only a cautious non-detection.
+\end{abstract}
+
+\section{Introduction}
+
+Short-period stellar variability provides a compact way to probe stellar
+structure, binary evolution, and accretion physics. In this project we observed
+two targets selected for rapid variability: V0399 UMa and AM CVn. The scientific
+goal was not to measure absolute calibrated magnitudes, but to test whether our
+data could recover short-period signals in differential photometry.
+
+AM CVn is the prototype of the AM CVn class: hydrogen-deficient ultracompact
+interacting binaries in which a white dwarf accretes helium-rich material from a
+compact donor. AM CVn systems have orbital periods of only minutes to about an
+hour and are important laboratories for accretion physics and compact binary
+evolution. They are also expected low-frequency gravitational-wave sources
+\cite{levitan2013,solheim2010}. The known AM CVn orbital timescale is about
+17 min, so it is a natural target for a single-night high-cadence photometry
+experiment.
+
+V0399 UMa was included as a suspected rapid variable. AAVSO VSX lists a period
+near 15.3 min for V0399 UMa \cite{aavsoVSX}. The field also contains DN UMa
+close to the target. DN UMa is itself a variable object, so an important part of
+the analysis was to test whether apparent V0399 UMa variability could be
+produced by blending, tracking drift, or point-spread-function contamination
+from DN UMa.
+
+Our specific project goals were:
+\begin{enumerate}
+  \item Reduce the May 20 CCD images into calibrated science frames.
+  \item Produce differential flux light curves for V0399 UMa and AM CVn.
+  \item Search for short-period variability using Lomb-Scargle periodograms and fixed-period fits.
+  \item Quantify calibration, comparison-star, tracking, and blending systematics.
+  \item Decide which variability claims are supported by the data.
+\end{enumerate}
+
+\section{Observations}
+
+The observations were taken on 2026 May 20 in the V band. The V0399 UMa data
+include two related image sets: 83 frames labeled \texttt{light\_V\_8s},
+spanning 22.63 min, and 109 frames labeled \texttt{light\_V0399\_V\_8s},
+spanning 29.80 min. Both sets were 8 s exposures. Together they span
+54.11 min with a gap between the two sequences. The \texttt{light\_V\_8s}
+frames were verified to contain V0399 UMa.
+
+The AM CVn data include 140 V-band frames with exposure times of 35, 40, and
+45 s. These frames span about 113 min. The exposure time changes were handled by
+converting all aperture sums to flux rates before comparison. The final two
+AM CVn science frames showed severe artifacts and very low peak counts, and
+were excluded from the science light curve.
+
+Calibration data included bias frames, dark frames matching the science
+exposure times, and V-band flats with exposure times of 0.3, 4, and 6 s. The
+calibration set had several known problems. All 0.3 s flats had dome-light
+contamination. The 4 and 6 s flats contained stars. Bias frames taken early in
+the night were affected by the dome-light issue, while later bias frames were
+cleaner.
+
+\section{Data Reduction}
+
+Reduction was performed with Python using \texttt{astropy}, \texttt{sep},
+\texttt{numpy}, \texttt{scipy}, and \texttt{matplotlib}. We built a reproducible
+local pipeline that performs calibration, source detection, aperture photometry,
+and period searches.
+
+\subsection{Calibration Frames}
+
+The default bias frame was the late master bias, because the early bias frames
+were affected by dome-light contamination. Dark frames were median-combined by
+exposure time and subtracted from science frames after bias subtraction.
+
+Several flat-field candidates were compared:
+\begin{itemize}
+  \item \texttt{flat\_0p3\_late\_bias}: 0.3 s flats corrected with the late bias.
+  \item \texttt{flat\_0p3\_early\_bias}: 0.3 s flats corrected with the early contaminated bias.
+  \item \texttt{flat\_4s\_masked}: star-masked 4 s flats, median combined.
+  \item \texttt{flat\_6s\_masked}: star-masked 6 s flats, median combined.
+  \item \texttt{flat\_4s\_masked\_clipmean}: star-masked 4 s flats, sigma-clipped mean.
+  \item \texttt{flat\_6s\_masked\_clipmean}: star-masked 6 s flats, sigma-clipped mean.
+  \item \texttt{no\_flat}: a diagnostic reduction with no flat-field correction.
+\end{itemize}
+
+For the star-contaminated 4 and 6 s flats, we normalized each flat by its median,
+subtracted a median-filtered smooth illumination model, masked compact positive
+residuals, dilated the masks to include star wings, and combined the remaining
+pixels. The best overall calibration choice for the science products was
+\texttt{flat\_4s\_masked\_clipmean}. This flat gave the lowest V0399 target
+scatter among the tested flat fields, although the improvement over
+\texttt{no\_flat} and the median 4 s flat was small.
+
+Calibration uncertainty was quantified by comparing frame-by-frame normalized
+V0399 differential flux across the real flat candidates. The combined median
+calibration-induced scatter was 0.119 percent, with a 90th percentile of
+0.353 percent. Including the \texttt{no\_flat} diagnostic increased the median
+to 0.170 percent. Therefore calibration uncertainty was real, but smaller than
+the final V0399 noise floor of about 1.4 percent.
+
+\subsection{Source Registration and Photometry}
+
+Simple fixed-aperture photometry did not work for V0399 UMa because tracking
+drift shifted the sources significantly over time. We therefore used per-frame
+source matching. For V0399 UMa, we detected V0399 and nearby DN UMa in each
+frame, used the pair to define the local field transformation, and then matched
+comparison stars to SEP detections in that frame. This fixed an early failure in
+which comparison apertures drifted onto blank sky.
+
+For AM CVn, the science images had no reliable WCS in the FITS headers, so we
+used the AAVSO comparison sequence chart \texttt{X42421BZ} \cite{aavsoCharts}.
+The downloaded chart contained labels 90, 96, 112, 125, 143, and 144. A good
+mid-run reference frame was selected manually because the automatic minimum-ADU
+reference choice picked one of the bad late artifact frames. The AAVSO sequence
+geometry was then fit to detected source positions in the reference image.
+
+Aperture photometry used circular apertures and sky annuli. For V0399 UMa, the
+baseline aperture was 5 px with annulus 10--18 px. For AM CVn, an aperture grid
+showed that 6 px with annulus 12--20 px gave the best target scatter among the
+tested circular apertures.
+
+For differential photometry, all fluxes were divided by exposure time to produce
+flux rates. V0399 UMa used an ensemble of eight Gaia comparison stars common to
+both V0399 pointings. AM CVn used the AAVSO sequence stars, but each comparison
+star was first normalized by its own median flux before forming the comparison
+ensemble. This step was necessary because the AAVSO sequence stars span
+approximately V = 8.97 to V = 14.36; otherwise, the ensemble median can jump
+when a bright saturated comparison star is excluded.
+
+\section{Analysis Methods}
+
+\subsection{Lomb-Scargle Periodograms}
+
+We used Lomb-Scargle periodograms to search for sinusoidal periodic signals in
+unevenly sampled time-series photometry \cite{lomb1976,scargle1982}. In the
+standard normalization, the Lomb-Scargle power measures the fractional
+improvement of a sinusoidal model over a constant model at each tested frequency
+\cite{astropyLS}. False-alarm probabilities were computed using the
+\texttt{astropy.timeseries.LombScargle} implementation. These FAPs must be
+interpreted carefully: they estimate the probability of obtaining a peak at
+least this high under a noise-only null hypothesis, not the probability that the
+star is non-variable \cite{baluev2008,astropyLS}.
+
+For V0399 UMa, we searched periods from 3 to 45 min and also tested the catalog
+period of 15.3 min directly. For AM CVn, we searched 5 to 90 min and a wider
+3 to 180 min range. We also fit fixed sinusoids at 17.14 and 17.20 min because
+those periods are close to the expected AM CVn orbital timescale.
+
+\subsection{Model Comparison and Controls}
+
+Because our light curves were limited by systematics, we did not rely only on
+the highest Lomb-Scargle peak. We also compared constant models, fixed-period
+sine models, sawtooth and eclipse-like templates, and two-star contamination
+models using residual scatter and the Bayesian information criterion (BIC).
+
+Control stars were essential. For V0399 UMa, DN UMa and HD 103187 were treated
+as checks, not as guaranteed constants. For AM CVn, each AAVSO sequence star was
+temporarily treated as a target and compared against the remaining sequence
+stars to estimate the control-star scatter.
+
+\subsection{V0399 UMa Contamination Tests}
+
+DN UMa is near V0399 UMa and is itself variable. We therefore ran several tests
+for blending and contamination:
+\begin{itemize}
+  \item aperture/annulus grid photometry over radii from 3 to 10 px;
+  \item difference-image residual photometry at V0399 UMa and DN UMa;
+  \item two-star mixture models in which V0399 and DN light curves could leak into each other;
+  \item injection-recovery tests for synthetic 15.3 min sine, dip, and sawtooth signals;
+  \item fixed-period tests at 15.3 min and nearby aliases.
+\end{itemize}
+These tests were designed to distinguish an intrinsic V0399 signal from
+common-mode residuals, tracking effects, and contamination from DN UMa.
+
+\section{Results}
+
+\subsection{Calibration and Data Quality}
+
+The calibration tests showed that no flat-field choice changed the qualitative
+result for V0399 UMa. The best target-scatter calibration was
+\texttt{flat\_4s\_masked\_clipmean}, with V0399 scatter of 1.385 percent and
+DN/check scatter of 1.673 percent. The no-flat diagnostic was surprisingly
+competitive, with V0399 scatter of 1.394 percent. The dome-light early-bias
+correction for the 0.3 s flats did not improve the science light curve.
+
+For AM CVn, the most important data-quality issue was not the flat field, but
+bad tracking/artifacts and the reference-frame choice. A contact sheet of early
+and late frames showed that the final two AM CVn frames were unusable. These
+frames were flagged as artifacts and removed. Several frames also saturated
+comparison star 90; these points were excluded only for that star rather than
+discarding the entire exposure.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{analysis/project/contamination_tests/V0399_UMa/plots/V0399_final_summary_panel.png}
+  \caption{V0399 UMa robustness summary. The panels show the preferred
+  common-comparison light curve, aperture-size dependence, two-star/common-mode
+  model comparison, and injection recovery at the VSX period. The main result is
+  that V0399 UMa does not show a robust independent periodic signal; larger
+  apertures reduce scatter but increase V0399--DN correlation.}
+  \label{fig:v0399-summary}
+\end{figure}
+
+\subsection{V0399 UMa}
+
+The most defensible V0399 UMa light curve uses the same eight Gaia comparison
+stars in both V0399-related sequences. With this setup, the normalized
+differential flux scatter is about 1.4 percent. The two V0399 sequences are
+internally consistent when the common comparison ensemble is used; smaller
+optimized comparison subsets sometimes reduce scatter, but they introduce
+segment-dependent trends and are less reliable for combined physical claims.
+
+The Lomb-Scargle periodogram did not recover a secure period. The best short
+period in one optimized/balanced analysis was 4.68 min with amplitude about
+0.40 percent, but the false-alarm probability was approximately 1.0. The
+cataloged 15.3 min period produced only a weak fixed-period fit, with amplitude
+about 0.28 percent and no convincing improvement over a constant model.
+
+The contamination tests were decisive. As the aperture radius increased from
+3 to 10 px, V0399 scatter decreased from about 3.65 percent to about
+0.68 percent, but the V0399--DN correlation increased from about 0.17 to
+0.78. Difference-image residuals at V0399 and DN were also highly correlated
+with $r \simeq 0.916$ for apertures of 4--6 px. This is not the signature of a
+clean residual at V0399 alone. It is more consistent with shared subtraction
+residuals, common-mode tracking effects, or blending between the nearby pair.
+
+Injection-recovery tests show that a coherent 15.3 min sine signal with
+amplitude greater than or equal to 1 percent should usually be recovered in
+these data. Signals at 0.2--0.5 percent are not reliably recovered. Therefore,
+if V0399 UMa varied at the VSX period during our observations, the modulation
+was likely below about the percent level, non-sinusoidal, or hidden by the
+systematic effects described above.
+
+\subsection{AM CVn}
+
+AM CVn gave a more promising light curve. The AAVSO sequence solution placed
+the target and comparison stars directly on detected sources in the good
+reference frame. The final differential light curve used 138 good target frames.
+The comparison-control scatter ranged from 0.70 percent to 1.22 percent for the
+AAVSO sequence stars. Most control stars were statistically consistent with
+constant flux under the empirical scatter model; star 90 was the least clean
+control and also saturated in nine frames.
+
+\begin{table}[H]
+  \centering
+  \caption{AM CVn comparison-star control tests. Each AAVSO sequence star was
+  treated as a target and divided by the remaining comparison-star ensemble.
+  The p-values use the empirical robust scatter for each control star.}
+  \label{tab:am-controls}
+  \begin{tabular}{lrrr}
+    \toprule
+    Control & $N$ & Robust scatter (\%) & Constant p-value \\
+    \midrule
+    90  & 129 & 0.70 & 0.044 \\
+    96  & 138 & 0.81 & 0.46 \\
+    125 & 138 & 0.84 & 0.53 \\
+    112 & 138 & 0.96 & 0.99 \\
+    143 & 138 & 1.08 & 0.23 \\
+    144 & 138 & 1.22 & 0.99 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The strongest Lomb-Scargle peak in the 5--90 min search is at 8.766 min, with
+power 0.156 and false-alarm probability 0.0138. A sine fit at this period has
+amplitude 0.93 percent and improves BIC by 13.47 relative to a constant model.
+The wider 3--180 min search gives a consistent peak at 8.744 min with FAP
+0.0140. Fixed-period fits near 17 min are weaker but still modestly favored:
+17.14 min gives amplitude 0.72 percent and BIC improvement 3.86; 17.20 min
+gives amplitude 0.74 percent and BIC improvement 4.36.
+
+\begin{table}[H]
+  \centering
+  \caption{AM CVn period-search results. Negative $\Delta$BIC values indicate
+  that the sine model is favored over a constant model.}
+  \label{tab:am-periods}
+  \begin{tabular}{lrrrrr}
+    \toprule
+    Run & $N$ & Best period (min) & LS FAP & Sine amp. (\%) & $\Delta$BIC \\
+    \midrule
+    5--90 min search  & 138 & 8.766 & 0.0138 & 0.93 & -13.47 \\
+    3--180 min search & 138 & 8.744 & 0.0140 & 0.93 & -13.43 \\
+    Fixed 17.14 min   & 138 & 17.14 & ---    & 0.72 & -3.86 \\
+    Fixed 17.20 min   & 138 & 17.20 & ---    & 0.74 & -4.36 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{analysis/am_cvn/plots/AM_CVn_sequence_X42421BZ_light_curve.png}
+  \caption{AM CVn differential light curve. Fluxes are exposure-normalized and
+  divided by an AAVSO comparison-star ensemble formed after normalizing each
+  comparison star by its own median flux. The final two artifact frames are
+  excluded. The light curve shows percent-level short-timescale structure.}
+  \label{fig:am-lightcurve}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{analysis/am_cvn/periodograms/sequence_X42421BZ/short_5_to_90min_periodogram.png}
+  \caption{AM CVn Lomb-Scargle periodogram from 5 to 90 min. The strongest peak
+  is near 8.77 min with false-alarm probability 0.014. Because this period is
+  close to half of the expected AM CVn timescale, it may be a harmonic or alias
+  of the physical orbital or superhump modulation.}
+  \label{fig:am-periodogram}
+\end{figure}
+
+The interpretation is therefore stronger for AM CVn than for V0399 UMa, but it
+still requires caution. The 8.76 min signal may be the first harmonic of a
+roughly 17.5 min modulation rather than a distinct physical period. A longer
+baseline or a second night of observations would help separate the harmonic from
+the fundamental and reduce the risk of an alias.
+
+\section{Conclusions}
+
+Our May 20 observations produced two different outcomes.
+
+For V0399 UMa, we do not claim a period detection. The final light curve has a
+noise floor near 1.4 percent. The cataloged 15.3 min period is not recovered
+significantly. Aperture-size tests, difference imaging, and two-star models all
+show that the remaining V0399 residuals are strongly coupled to DN UMa or to
+common-mode image systematics. The scientifically defensible conclusion is that
+our data are consistent with constant flux within the systematic noise floor,
+while weak sub-percent variability cannot be ruled out.
+
+For AM CVn, we do detect a credible short-period signal. The dominant
+Lomb-Scargle peak is near 8.76 min with FAP about 0.014 and amplitude about
+0.93 percent. Fixed fits near 17.1 min are weaker but still moderately favored.
+The most likely interpretation is that our data detect short-timescale AM CVn
+variability, but the limited baseline and harmonic ambiguity prevent a precise
+period determination from this dataset alone.
+
+The main limitations of the project were calibration imperfections, tracking
+drift, comparison-star saturation, and short time baseline. The most important
+improvements would be to obtain a longer continuous run, use cleaner twilight or
+dome flats without stars, avoid saturated comparison stars, and obtain repeated
+observations on multiple nights. For V0399 UMa specifically, higher spatial
+resolution or PSF photometry would be useful because DN UMa is close enough to
+contaminate aperture and difference-image measurements.
+
+\section*{Acknowledgments}
+
+We thank the PHYSICS 100 teaching staff for telescope access, observing support,
+and data-reduction guidance. We used AAVSO resources including the Variable Star
+Plotter sequence for AM CVn and the VSX catalog as a reference for known
+variable-star periods. TODO: add specific names and institutional
+acknowledgments.
+
+\begin{thebibliography}{9}
+
+\bibitem{astropyLS}
+Astropy Collaboration.
+\textit{Lomb-Scargle Periodograms}.
+\url{https://docs.astropy.org/en/stable/timeseries/lombscargle.html}.
+
+\bibitem{aavsoCharts}
+AAVSO.
+\textit{Variable Star Plotter and comparison-star charts}.
+\url{https://www.aavso.org/variable-star-charts}.
+
+\bibitem{aavsoVSX}
+AAVSO.
+\textit{The International Variable Star Index (VSX)}.
+\url{https://vsx.aavso.org/}.
+
+\bibitem{baluev2008}
+Baluev, R. V. 2008.
+\textit{Assessing the statistical significance of periodogram peaks}.
+MNRAS, 385, 1279.
+\url{https://academic.oup.com/mnras/article/385/3/1279/1010111}.
+
+\bibitem{levitan2013}
+Levitan, D., et al. 2013.
+\textit{Orbital periods and accretion disc structure of four AM CVn systems}.
+MNRAS, 432, 2048.
+\url{https://academic.oup.com/mnras/article/432/3/2048/1747230}.
+
+\bibitem{lomb1976}
+Lomb, N. R. 1976.
+\textit{Least-squares frequency analysis of unequally spaced data}.
+Astrophysics and Space Science, 39, 447.
+
+\bibitem{scargle1982}
+Scargle, J. D. 1982.
+\textit{Studies in astronomical time series analysis. II. Statistical aspects
+of spectral analysis of unevenly spaced data}.
+Astrophysical Journal, 263, 835.
+
+\bibitem{solheim2010}
+Solheim, J.-E. 2010.
+\textit{AM CVn Stars: Status and Challenges}.
+PASP, 122, 1133.
+
+\end{thebibliography}
+
+\appendix
+
+\section{Individual Contributions}
+
+TODO: Fill this in before submission. The project guidelines require individual
+team member contributions to be identified in an appendix.
+
+\begin{table}[H]
+  \centering
+  \caption{Draft contribution table. Replace the TODO rows with the actual team
+  members and their contributions.}
+  \begin{tabular}{p{0.25\textwidth}p{0.65\textwidth}}
+    \toprule
+    Team member & Contributions \\
+    \midrule
+    TODO & Observing, calibration analysis, V0399 photometry, report writing \\
+    TODO & AM CVn photometry, periodograms, figures, presentation preparation \\
+    TODO & Literature background, uncertainty analysis, editing \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Reproducible Analysis Products}
+
+Key files used in this draft:
+\begin{itemize}
+  \item \texttt{docs/ANALYSIS\_PLAN.md}
+  \item \texttt{docs/RESULTS.md}
+  \item \texttt{scripts/project\_pipeline.py}
+  \item \texttt{scripts/v0399\_contamination\_tests.py}
+  \item \texttt{scripts/v0399\_polish\_figures.py}
+  \item \texttt{scripts/amcvn\_sequence\_analysis.py}
+  \item \texttt{analysis/project/contamination\_tests/V0399\_UMa/plots/V0399\_final\_summary\_panel.png}
+  \item \texttt{analysis/project/photometry/AM\_CVn\_sequence\_X42421BZ/differential\_light\_curve.csv}
+  \item \texttt{analysis/project/periodograms/AM\_CVn\_sequence\_X42421BZ/period\_results.csv}
+  \item \texttt{analysis/project/periodograms/AM\_CVn\_sequence\_X42421BZ/fixed\_period\_sine\_summary.csv}
+\end{itemize}
+
+\end{document}

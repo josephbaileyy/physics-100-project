@@ -1,8 +1,0 @@
-signal,period_s,period_min,cycles_in_dataset,median_samples_per_cycle,median_exposure_smearing_attenuation,min_exposure_smearing_attenuation,detectability_note
-26.3s oscillation,26.3,0.43833333333333335,253.69163429782418,0.5417094858443443,0.2061832031183634,0.14662754075023898,not reliable: period is shorter than or comparable to exposures and below cadence Nyquist
-115s oscillation,115.0,1.9166666666666667,58.018173756806746,2.368691668140669,0.8125400980900493,0.7664902486807482,marginal: only about 2-3 samples per cycle
-120s oscillation,120.0,2.0,55.60074985027313,2.4716782624076545,0.8269933431326881,0.7842133035765372,marginal: only about 2-3 samples per cycle
-525s harmonic,525.0,8.75,12.708742822919573,10.813592398033489,0.9904784931172702,0.9879585103852689,measurable as a photometric component if amplitude is high enough
-1028.7322s orbital,1028.7322,17.145536666666665,6.485740391943381,21.189125138156697,0.9975149233642117,0.9968554481486022,measurable as a photometric component if amplitude is high enough
-1051.2s superhump,1051.2,17.52,6.3471175628165675,21.651901578691056,0.9976199424824322,0.9969883113882633,measurable as a photometric component if amplitude is high enough
-13.38h precession,48168.0,802.8,0.13851706489853796,992.1316545304326,0.9999988656394841,0.9999985643251018,not measurable: less than one cycle in the dataset

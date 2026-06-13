@@ -1,40 +1,28 @@
 # Sharing Notes
 
-This repository is prepared for sharing code, reports, CSV summaries, and plots
-with teammates.
+This repo is organized so GitHub readers land on the final AM CVn project
+rather than the older exploratory work.
 
-## Included in Git
+Share the AM CVn active tree:
 
-- Analysis scripts in `scripts/`
-- Configuration in `configs/targets.json`
-- Project documentation:
-  - `docs/ANALYSIS_PLAN.md`
-  - `docs/RESULTS.md`
-  - `docs/FINAL_PROJECT_REPORT_DRAFT.md`
-  - `docs/FINAL_PROJECT_REPORT_DRAFT.tex`
-  - `docs/FINAL_PROJECT_REPORT_DRAFT.pdf`
-- Shareable project products under `analysis/project/`, including:
-  - CSV summaries and light curves
-  - periodogram CSVs
-  - final plots and QC overlays
-  - AAVSO chart metadata for AM CVn sequence `X42421BZ`
+- `README.md`
+- `requirements.txt`
+- `observations/targets.json`
+- `src/amcvn/`
+- `scripts/amcvn_pipeline.py`
+- `scripts/amcvn_sequence_analysis.py`
+- `products/final_report/AM_CVn_final_report.pdf`
+- `products/final_presentation/AM_CVn_final_presentation.pdf`
+- `analysis/am_cvn/`
+- `analysis/calibration/`
+- `references/literature/am_cvn/`
 
-## Excluded from Git
+Do not share local FITS data unless separately requested:
 
-The raw and reduced FITS files are intentionally ignored:
+- `observations/raw/`
+- `*.fit`
+- `*.fits`
+- `*.fts`
 
-- `raw/`
-- `*.fit`, `*.fits`, `*.fts`
-
-These files are several GB locally and should be shared through Google Drive or
-another data archive, not ordinary GitHub. The scripts assume those raw data
-paths are available locally if someone wants to reproduce the full reduction.
-
-## Most Useful Files for Teammates
-
-- `docs/RESULTS.md`
-- `docs/FINAL_PROJECT_REPORT_DRAFT.pdf`
-- `analysis/project/contamination_tests/V0399_UMa/plots/V0399_final_summary_panel.png`
-- `analysis/project/plots/AM_CVn_sequence_X42421BZ_light_curve.png`
-- `analysis/project/periodograms/AM_CVn_sequence_X42421BZ/short_5_to_90min_periodogram.png`
-- `analysis/project/photometry/AM_CVn_sequence_X42421BZ/AM_CVn_sequence_reference_overlay.png`
+Retired or historical material is under `archive/` and is not part of the active
+AM CVn analysis package.

@@ -1,0 +1,7 @@
+file,ok,dx,dy,plot
+light_V_8s_2026_05_20-0001_flat_0p3_late_bias_cal.fits,True,0.0,0.0,analysis/may20/qc/V0399_UMa/registration_sign_check/light_V_8s_2026_05_20-0001_flat_0p3_late_bias_cal_signcheck.png
+light_V_8s_2026_05_20-0083_flat_0p3_late_bias_cal.fits,True,40.0,12.0,analysis/may20/qc/V0399_UMa/registration_sign_check/light_V_8s_2026_05_20-0083_flat_0p3_late_bias_cal_signcheck.png
+light_V0399_V_8s_2026_05_20-0038_flat_0p3_late_bias_cal.fits,True,0.0,0.0,analysis/may20/qc/V0399_UMa/registration_sign_check/light_V0399_V_8s_2026_05_20-0038_flat_0p3_late_bias_cal_signcheck.png
+light_V0399_V_8s_2026_05_20-0071_flat_0p3_late_bias_cal.fits,True,-28.0,-12.0,analysis/may20/qc/V0399_UMa/registration_sign_check/light_V0399_V_8s_2026_05_20-0071_flat_0p3_late_bias_cal_signcheck.png
+light_V0399_V_8s_2026_05_20-0092_flat_0p3_late_bias_cal.fits,True,-40.0,-16.0,analysis/may20/qc/V0399_UMa/registration_sign_check/light_V0399_V_8s_2026_05_20-0092_flat_0p3_late_bias_cal_signcheck.png
+light_V0399_V_8s_2026_05_20-0109_flat_0p3_late_bias_cal.fits,True,-44.0,-20.0,analysis/may20/qc/V0399_UMa/registration_sign_check/light_V0399_V_8s_2026_05_20-0109_flat_0p3_late_bias_cal_signcheck.png

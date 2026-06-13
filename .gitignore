@@ -1,12 +1,12 @@
 # Local raw data and bulky FITS products. These are reproducible from the
 # shared Google Drive/raw archive and are too large for ordinary GitHub pushes.
-raw/
+observations/raw/
 *.fit
 *.fits
 *.fts
 
 # Bulky diagnostic overlays. Final figures/CSVs outside qc/ are kept tracked.
-analysis/project/qc/
+analysis/am_cvn/qc/
 
 # Python/runtime caches
 __pycache__/
@@ -28,7 +28,11 @@ __pycache__/
 *.fdb_latexmk
 *.synctex.gz
 
+# Local drafting notes that are not the submitted final products.
+products/final_report/*_snippet.tex
+products/final_presentation/slide_outline.md
+
 # Local course/literature PDFs used as references; commit citations/indexes
 # instead of redistributing source PDFs.
 Preparation of Oral Presentations and Project Reports 2026.pdf
-references/am_cvn/*.pdf
+references/literature/am_cvn/*.pdf

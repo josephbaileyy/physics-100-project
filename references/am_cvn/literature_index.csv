@@ -1,8 +1,0 @@
-key,title,authors,year,local_file,source_url,used_for
-patterson1979,Increase in the orbital period of AM Canum Venaticorum,"Patterson; Nather; Robinson; Handler",1979,,https://articles.adsabs.harvard.edu/pdf/1979ApJ...232..819P,"historic 1051.212 s photometric period; 8.76/17.52 min mode behavior; ADS download timed out locally"
-smak1975,AM Canum Venaticorum,"Smak",1975,,https://ui.adsabs.harvard.edu/scan/manifest/1975AcA....25..371S,"early photometric interpretation; ADS scan recorded but local download timed out"
-nelemans2001,Spectroscopic evidence for the binary nature of AM CVn,"Nelemans; Steeghs; Groot",2001,2001_nelemans_spectroscopic_binary.pdf,https://arxiv.org/pdf/astro-ph/0104220,"spectroscopic confirmation of the 1028.73 s orbital period"
-roelofs2006,Kinematics of the ultracompact helium accretor AM Canum Venaticorum,"Roelofs; Groot; Nelemans; Marsh; Steeghs",2006,2006_roelofs_am_cvn_kinematics.pdf,https://arxiv.org/pdf/astro-ph/0606327,"orbital/superhump interpretation; mass-ratio and spectroscopy context"
-kruszewski1992,On the periods of AM CVn,"Kruszewski; Semeniuk",1992,1992_kruszewski_semeniuk_am_cvn.pdf,https://acta.astrouw.edu.pl/Vol42/n4/pap_42_4_4.pdf,"1962 photometry reanalysis; 525 s harmonic and 1051 s family"
-smak2023,AM CVn - System Parameters and Gravitational Waves,"Smak",2023,2023_smak_am_cvn_system_parameters.pdf,https://arxiv.org/pdf/2312.16506,"modern system parameters; orbital/superhump/negative-superhump summary; period-change context"
-warner1995,The AM CVn systems: A bibliographic search for clues to their cataclysmic nature,"Warner",1995,,https://link.springer.com/article/10.1007/BF00756074,"bibliographic review; landing page recorded"

@@ -1,0 +1,2 @@
+N_good,median_formal_error_pct,mean_formal_error_pct,robust_target_scatter_pct,best_model,best_model_reduced_chi2,suggested_error_scale_from_best_model,scaled_median_error_pct
+138,0.9003448935157883,0.9134143984568383,1.512890971306458,double_wave_17p14min,2.6998723489314918,1.643128829073208,1.4793826506446393

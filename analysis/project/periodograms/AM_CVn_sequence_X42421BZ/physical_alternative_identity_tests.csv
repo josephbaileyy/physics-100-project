@@ -1,6 +1,0 @@
-hypothesis,can_current_photometry_test,current_data_result,decisive_test,notes
-AM CVn white-dwarf binary,partially,supports known 525/1051 s photometric family,"time-resolved spectroscopy: helium emission/absorption, S-wave, Doppler tomography",literature spectroscopy already establishes the binary/orbital interpretation
-single pulsating white dwarf,weakly,period alone is not decisive; double-wave/superhump family favors AM CVn context,spectrum without accretion signatures plus multi-period WD pulsation pattern,would not naturally explain published orbital S-wave spectroscopy
-rapidly oscillating Ap or delta Scuti/SX Phe star,weakly,1055.2 s is far shorter than ordinary delta Scuti periods; colors/spectrum needed,"stellar spectrum, Gaia color/absolute magnitude, absence of helium accretion features",photometric period alone cannot classify the object
-instrumental/comparison-star artifact,yes,leave-one-comparison and residual tests passed; residual FAP=0.989,repeat on another night and independent comparison ensemble,"first/second-half stability is imperfect, so more data would still help"
-not a compact binary,no,111.2 min baseline cannot override decades of spectroscopy,classification spectroscopy and radial-velocity curve,broadband photometry can support/refine timing but cannot falsify the established object class

@@ -1,0 +1,43 @@
+{
+  "light_dir": "observations/raw/may20/lights",
+  "calibration_dir": "observations/raw/may20/calibration",
+  "output_dir": "analysis/am_cvn",
+  "saturation_adu": 58000,
+  "aperture_radius": 5.0,
+  "annulus_inner": 10.0,
+  "annulus_outer": 18.0,
+  "min_comparisons": 2,
+  "targets": {
+    "AM_CVn": {
+      "light_glob": "light_AMCVn_V_*s_2026_05_20-*.fit",
+      "period_min_minutes": 5.0,
+      "period_max_minutes": 90.0,
+      "manual_objects": [
+        {
+          "id": "target",
+          "role": "target",
+          "x": null,
+          "y": null
+        },
+        {
+          "id": "96",
+          "role": "comparison",
+          "x": null,
+          "y": null
+        },
+        {
+          "id": "99",
+          "role": "comparison",
+          "x": null,
+          "y": null
+        },
+        {
+          "id": "check_1",
+          "role": "check",
+          "x": null,
+          "y": null
+        }
+      ]
+    }
+  }
+}
